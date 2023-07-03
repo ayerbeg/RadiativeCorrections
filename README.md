@@ -1,5 +1,6 @@
 # RadiativeCorrections
 Radiative corrections for inclusive DIS experiments.  Based on the Fortran RADCOR code, fully converted to C++.
+Imported from David Flay's repo (https://github.com/dflay/RadiativeCorrections)
 
 # System Requirements 
 Your system needs to have the following:
