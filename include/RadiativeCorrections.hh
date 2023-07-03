@@ -8,8 +8,9 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include <vector> 
 
-#include "constants.hh"
+#include "RCConstants.hh"
 #include "Kinematics.hh"
 #include "eInclusiveCrossSection.hh" 
 #include "ElasticFormFactor.hh"
@@ -23,6 +24,7 @@ class RadiativeCorrections {
 
    private:
       int fVerbosity;
+      int fNumIter; 
       bool fElasticTail,fElasticApprox; 
 
       RC::thrType_t fThreshold;  // integration threshold: elastic or pion
@@ -34,6 +36,7 @@ class RadiativeCorrections {
       double fEs,fEp,fThDeg;
       double fR,fCFACT;
       double fTa,fTb,fT,fEta,fXi,fb;
+      double fIterThresh; 
 
       void CalculateB();
       void CalculateXi();
@@ -94,12 +97,18 @@ class RadiativeCorrections {
       void SetCrossSection(eInclusiveCrossSection *XS) { fInclXS     = XS; }
       void SetFormFactor(ElasticFormFactor *ff)        { fFormFactor = ff; }
 
+      // settings for unfolding born xs 
+      void SetNumberOfIterations(int i)                { fNumIter    = i;   }  // number of iterations 
+      void SetUnfoldingTolerance(double thr)           { fIterThresh = thr; }  // convergence threshold  
+
+      int Unfold(double Es,double th,std::vector<double> Ep,std::vector<double> xsr,std::vector<double> &xsb); 
+
       double Radiate();
       double ElasticTail_peakApprox();  
       double ElasticTail_exact();  
      
       // use these for testing only 
-      void SetTargetVariables(double Z,double A)       { fZ = Z; fA = A; fMT = A*proton_mass; }  
+      void SetTargetVariables(double Z,double A)       { fZ = Z; fA = A; fMT = A*RC::Constants::proton_mass; }  
       void SetKinematicVariables(double Es,double Ep,double th); 
       void CalculateVariables();  // compute various variables when Es, Ep, th change
       double GetF_soft(); 
